@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic A6 Badges on A4</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 0;
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            break-after: page;
+        }
+
+        .badge {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: .1px solid #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .badge svg {
+            width: 100%;
+            height: 60%;
+            background-color: lightgray; /* Placeholder background */
+        }
+        .badge .info {
+            text-align: center;
+        }
+        .badge .name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .badge .team, .badge .role {
+            font-size: 1em;
+        }
+    </style>
+
+    <script src="./jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <script>
+        const body = document.body;
+
+        $.getJSON('participants.json', (data) => {
+            // Create badges dynamically
+            for (let i = 0; i < data.length; i++) {
+                const participant = data[i];
+
+                // Create a new page if it's the start of a new 4-badge block
+                if (i % 4 === 0) {
+                    const page = document.createElement('div');
+                    page.className = 'container';
+                    body.appendChild(page);
+                }
+                const currentPage = body.lastChild;
+
+                // Create a badge
+                const badge = document.createElement('div');
+                badge.className = 'badge';
+
+                // Add SVG
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("width", "100%");
+                rect.setAttribute("height", "100%");
+                rect.setAttribute("fill", "#ccc");
+                svg.appendChild(rect);
+
+                // Add text info
+                const info = document.createElement('div');
+                info.className = 'info';
+                info.innerHTML = `
+                    <div class="name">${participant.firstName} ${participant.lastName}</div>
+                    <div class="team">${participant.teamName}</div>
+                    <div class="institution">${participant.instName}</div>
+                    <div class="role">${participant.role}</div>
+                `;
+
+                // Append SVG and info to the badge
+                badge.appendChild(svg);
+                badge.appendChild(info);
+
+                // Append badge to the page
+                currentPage.appendChild(badge);
+            }
+        })
+    </script>
+</body>
+</html>
