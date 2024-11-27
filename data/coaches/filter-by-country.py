@@ -32,9 +32,22 @@ with open('Coach.csv', 'r') as f:
     for group, users in out.items():
         print(f'{group}: {len(users)}')
 
+        coach_teams = dict()
+        for coach in users:
+            if coach['Name'] not in coach_teams:
+                coach_teams[coach['Name']] = {'Team': [], 'University': coach['University'], 'Role': coach['Role']}
+
+            coach_teams[coach['Name']]['Team'].append(coach['Team'])
+        
+
         with open(f'{group}.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=reader.fieldnames)
             writer.writeheader()
 
-            for row in users:
-                writer.writerow(row)
+            for coach in coach_teams.keys():
+                writer.writerow({
+                    'Name': coach,
+                    'Team': ' || '.join(coach_teams[coach]['Team']),
+                    'University': coach_teams[coach]['University'],
+                    'Role': coach_teams[coach]['Role'],
+                })
