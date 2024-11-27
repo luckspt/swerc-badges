@@ -17,8 +17,7 @@
       devShell = pkgs.mkShell {
         buildInputs = with pkgs; [
           python3
-          python311Packages.jinja2
-          jinja2-cli
+          texliveMedium
         ];
      };
   });

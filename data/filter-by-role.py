@@ -4,7 +4,7 @@ group_by = 'role'
 
 with open('all.csv', 'r') as f:
     reader = csv.DictReader(f)
-    data = sorted(reader, key=lambda x: x['firstName'])
+    data = sorted(filter(lambda x: x['teamStatus'].lower() == 'accepted',reader), key=lambda x: x['firstName'])
 
     out = dict()
     for row in data:
@@ -25,5 +25,5 @@ with open('all.csv', 'r') as f:
                     'Name': row['firstName'] + ' ' + row['lastName'],
                     'Team': row['teamName'],
                     'University': row['instName'],
-                    'Role': row['role']
+                    'Role': group
                 })
