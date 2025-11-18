@@ -1,1 +1,5 @@
 *.csv
+*.DS_Store
+assembler/backs/*
+assembler/fronts/*
+assembler/output/*
